@@ -1,0 +1,14 @@
+{% extends "layout.njk" %}
+
+{% set title = "500: Unknown error" %}
+
+{% block content %}
+  {% if error %}
+    <pre class="error">{{ error }}</pre>
+  {% else %}
+    <p>An unexpected error has occurred.</p>
+  {% endif %}
+  <p>
+    <a href="/">Return to home page</a>
+  </p>
+{% endblock %}

@@ -4,6 +4,7 @@ const enforce = require("express-sslify");
 const nunjucks = require("nunjucks");
 const path = require("path");
 
+const { notFoundHandler, unexpectedErrorHandler } = require("./error-handlers");
 const router = require("./router");
 
 function buildApp(isDev) {
@@ -33,6 +34,9 @@ function buildApp(isDev) {
     // Serve Sass files in dev for source mapping.
     app.use("/styles", express.static(path.join(__dirname, "styles")));
   }
+
+  app.use(notFoundHandler());
+  app.use(unexpectedErrorHandler(isDev));
 
   return app;
 }
