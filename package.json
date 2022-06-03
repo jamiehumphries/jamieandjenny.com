@@ -9,11 +9,12 @@
     "prebuild": "npm run clean",
     "build": "run-p build:*",
     "build:sass": "npm run sass -- --style=compressed --no-source-map",
+    "configure": "heroku config --app jamieandjenny --shell > .env",
     "clean": "rimraf src/public/generated/",
     "predev": "npm run clean",
     "dev": "cross-env NODE_ENV=development run-p dev:*",
     "dev:sass": "npm run sass -- --watch",
-    "dev:server": "node-dev --inspect --respawn src/server.js",
+    "dev:server": "node-dev --inspect --respawn --require=dotenv/config src/server.js",
     "dev:sync": "browser-sync start --config bs-config.js",
     "lint": "eslint src/",
     "sass": "sass src/styles/:src/public/generated/css/",
@@ -21,12 +22,14 @@
   },
   "dependencies": {
     "express": "4.18.1",
+    "express-basic-auth": "1.2.1",
     "express-sslify": "1.2.0",
     "nunjucks": "3.2.3"
   },
   "devDependencies": {
     "browser-sync": "2.27.10",
     "cross-env": "7.0.3",
+    "dotenv": "16.0.1",
     "eslint": "8.16.0",
     "eslint-config-prettier": "8.5.0",
     "node-dev": "7.4.3",

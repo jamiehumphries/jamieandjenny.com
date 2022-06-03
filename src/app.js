@@ -1,4 +1,5 @@
 const express = require("express");
+const basicAuth = require("express-basic-auth");
 const enforce = require("express-sslify");
 const nunjucks = require("nunjucks");
 const path = require("path");
@@ -19,6 +20,9 @@ function buildApp(isDev) {
     watch: isDev,
   });
   app.set("view engine", "njk");
+
+  const users = JSON.parse(process.env.USERS);
+  app.use(basicAuth({ users, challenge: true }));
 
   app.use(router);
 
