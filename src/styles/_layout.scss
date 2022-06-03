@@ -1,0 +1,62 @@
+@import "./colors";
+
+$vertical-stroke-width: 4rem;
+$vertical-stroke-margin-right: 1rem;
+$text-margin-right: $vertical-stroke-width + $vertical-stroke-margin-right;
+
+.container {
+  position: relative;
+
+  max-width: 960px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  margin: auto;
+
+  overflow: hidden;
+}
+
+h1 {
+  font-size: 3rem;
+  @media only screen and (max-width: 640px) {
+    font-size: 2rem;
+  }
+  margin: 0 $text-margin-right 0 0;
+}
+
+.content {
+  padding: 1rem;
+  margin-right: $text-margin-right;
+  text-align: justify;
+}
+
+#header-stroke {
+  width: 100%;
+  padding: 1rem;
+  margin-top: 2rem;
+  box-sizing: border-box;
+
+  background-color: rgba($red, 0.5);
+}
+
+#vertical-stroke {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: $vertical-stroke-margin-right;
+  width: $vertical-stroke-width;
+  box-sizing: border-box;
+
+  pointer-events: none;
+  background-color: rgba($green, 0.5);
+}
+
+#footer-stroke {
+  height: 5rem;
+  width: 150%;
+  margin: 2rem 0 4rem -25%;
+  box-sizing: border-box;
+  transform: rotate(-8deg);
+
+  pointer-events: none;
+  background-color: rgba($blue, 0.5);
+}
