@@ -1,7 +1,8 @@
 {% extends "layout.njk" %}
 
+{% set isHome = true %}
+{% set title = "Jamie and Jenny’s wedding" %}
+
 {% block content %}
-  <h1>Wedding day!</h1>
-  <p>Congratulations.</p>
   <p>Hello, {{ name | capitalize }}!</p>
 {% endblock %}

@@ -1,3 +1,10 @@
-h1 {
-  color: orangered;
+@import "./container";
+
+body {
+  font-family: "Open Sans", sans-serif;
+
+  h1 {
+    font-family: "Dancing Script", cursive;
+    font-size: 3rem;
+  }
 }
