@@ -22,7 +22,7 @@ function buildApp(isDev) {
   });
   app.set("view engine", "njk");
 
-  const users = JSON.parse(process.env.USERS);
+  const users = JSON.parse(process.env.USERS.replaceAll('\\"', '"'));
   app.use(basicAuth({ users, challenge: true }));
 
   app.use(router);
