@@ -1,5 +1,6 @@
 const express = require("express");
 const basicAuth = require("express-basic-auth");
+const bodyParser = require("body-parser");
 const enforce = require("express-sslify");
 const nunjucks = require("nunjucks");
 const path = require("path");
@@ -25,6 +26,7 @@ function buildApp(isDev) {
   const users = JSON.parse(process.env.USERS.replaceAll('\\"', '"'));
   app.use(basicAuth({ users, challenge: true }));
 
+  app.use(bodyParser.urlencoded({ extended: true }));
   app.use(router);
 
   app.use(express.static(path.join(__dirname, "public/static")));

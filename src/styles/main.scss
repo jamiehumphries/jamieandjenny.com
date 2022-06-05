@@ -1,11 +1,13 @@
 @import "./colors";
 @import "./error";
+@import "./fonts";
+@import "./form";
 @import "./layout";
 
 body {
   margin: 0;
   background-color: $off-white;
-  font-family: "Open Sans", sans-serif;
+  font-family: $sans-serif;
 
   h1,
   h2,
@@ -13,6 +15,6 @@ body {
   h4,
   h5,
   h6 {
-    font-family: "Dancing Script", cursive;
+    font-family: $cursive;
   }
 }
