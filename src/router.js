@@ -69,7 +69,7 @@ function withData(...data) {
 }
 
 function pickRsvpData(req, guest) {
-  return pick(req.body[guest.id], "attending", "starter", "main");
+  return pick(req.body[guest.id], "attending", "starter", "main", "dietary");
 }
 
 class GuestOptionsValidator {

@@ -22,9 +22,13 @@ form {
       }
     }
 
-    &.options-set {
+    &:not(.guest) {
       margin: 1rem 0;
     }
+  }
+
+  .hint {
+    font-size: small;
   }
 
   .option {
@@ -70,5 +74,14 @@ form {
     &:active {
       background-color: darken($off-white, 5%);
     }
+  }
+
+  textarea {
+    width: 100%;
+    max-width: 640px;
+    resize: vertical;
+    min-height: 6rem;
+
+    font-family: $sans-serif;
   }
 }

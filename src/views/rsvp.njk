@@ -17,7 +17,7 @@
 {% endmacro %}
 
 {% macro options(data) %}
-  <fieldset class="options-set" data-field="{{ data.fieldName }}">
+  <fieldset data-field="{{ data.fieldName }}">
     <legend>
       <h3>{{ data.title }}</h3>
     </legend>
@@ -92,6 +92,13 @@
           meatOption: "Lamb 2 ways – rosemary and garlic infused pink cutlet, and lamb shoulder confit encased in shortcrust pastry, with minted potato tower, roasted heritage carrots and leek spoon, finished with a red wine jus",
           vegOption: "Strudel of wild mushroom, leeks, cream cheese, roasted root vegetables and potato cake "
         }) }}
+        <fieldset data-field="{{ data.fieldName }}">
+          <legend>
+            <h3>Allergies or dietary requirements?</h3>
+          </legend>
+          <p class="hint">Please let us know of any allergies or other dietary requirements:</p>
+          <textarea name="{{ guest.id }}[dietary]" rows="6">{{ guest.dietary }}</textarea>
+        </fieldset>
       </fieldset>
     {% endfor %}
     <input type="submit" value="Send">
