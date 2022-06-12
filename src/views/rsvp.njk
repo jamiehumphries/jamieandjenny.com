@@ -67,38 +67,44 @@
         </legend>
         {{ options({
           guest: guest,
-          title: "Bringing a guest?" if guest.isPlusOne else "Attending?",
+          title: "Attending?" if not isPlusOne else "Bringing a guest?",
           fieldName: "attending",
           options: [
             { value: "yes", label: "Yes, I am attending" if guest.isSingle else ("Yes, I am bringing a guest" if guest.isPlusOne else "Yes, " + guest | firstName + " is attending") },
             { value: "no", label: "No, I am not attending" if guest.isSingle else ("No, I am not be bringing a guest" if guest.isPlusOne else "No, " + guest | firstName + " is not attending") }
           ]
         })}}
-        {{ courseOptions({
-          guest: guest,
-          course: {
-            id: "starter",
-            name: "starter"
-          },
-          meatOption: "Chicken and leek terrine on baked olive bread with balsamic oil",
-          vegOption: "Welsh cheese risotto cakes with spicy dressed leaves, herb salsa and plum chutney"
-        }) }}
-        {{ courseOptions({
-          guest: guest,
-          course: {
-            id: "main",
-            name: "main course"
-          },
-          meatOption: "Lamb 2 ways – rosemary and garlic infused pink cutlet, and lamb shoulder confit encased in shortcrust pastry, with minted potato tower, roasted heritage carrots and leek spoon, finished with a red wine jus",
-          vegOption: "Strudel of wild mushroom, leeks, cream cheese, roasted root vegetables and potato cake "
-        }) }}
-        <fieldset data-field="{{ data.fieldName }}">
-          <legend>
-            <h3>Allergies or dietary requirements?</h3>
-          </legend>
-          <p class="hint">Please let us know of any allergies or other dietary requirements:</p>
-          <textarea name="{{ guest.id }}[dietary]" rows="6">{{ guest.dietary }}</textarea>
-        </fieldset>
+        {% if guest.isBaby %}
+          <p><em>Please let us know if there is anything that we can provide for the baby!</em></p>
+          <input type="hidden" name="baby[starter]" value="milk">
+          <input type="hidden" name="baby[main]" value="milk">
+        {% else %}
+          {{ courseOptions({
+            guest: guest,
+            course: {
+              id: "starter",
+              name: "starter"
+            },
+            meatOption: "Chicken and leek terrine on baked olive bread with balsamic oil",
+            vegOption: "Welsh cheese risotto cakes with spicy dressed leaves, herb salsa and plum chutney"
+          }) }}
+          {{ courseOptions({
+            guest: guest,
+            course: {
+              id: "main",
+              name: "main course"
+            },
+            meatOption: "Lamb 2 ways – rosemary and garlic infused pink cutlet, and lamb shoulder confit encased in shortcrust pastry, with minted potato tower, roasted heritage carrots and leek spoon, finished with a red wine jus",
+            vegOption: "Strudel of wild mushroom, leeks, cream cheese, roasted root vegetables and potato cake "
+          }) }}
+          <fieldset data-field="{{ data.fieldName }}">
+            <legend>
+              <h3>Allergies or dietary requirements?</h3>
+            </legend>
+            <p class="hint">Please let us know of any allergies or other dietary requirements:</p>
+            <textarea name="{{ guest.id }}[dietary]" rows="6">{{ guest.dietary }}</textarea>
+          </fieldset>
+        {% endif %}
       </fieldset>
     {% endfor %}
     <input type="submit" value="Send">

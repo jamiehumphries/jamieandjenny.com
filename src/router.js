@@ -108,6 +108,9 @@ class GuestOptionsValidator {
     if (this.guest.isChild) {
       validOptions.push("kids");
     }
+    if (this.guest.isBaby) {
+      validOptions.push("milk");
+    }
 
     let message = `Select a ${courseName || courseId} for `;
     if (this.guest.isSingle) {
