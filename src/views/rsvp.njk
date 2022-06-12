@@ -71,13 +71,14 @@
           fieldName: "attending",
           options: [
             { value: "yes", label: "Yes, I am attending" if guest.isSingle else ("Yes, I am bringing a guest" if guest.isPlusOne else "Yes, " + guest | firstName + " is attending") },
-            { value: "no", label: "No, I am not attending" if guest.isSingle else ("No, I am not be bringing a guest" if guest.isPlusOne else "No, " + guest | firstName + " is not attending") }
+            { value: "no", label: "No, I am not attending" if guest.isSingle else ("No, I am not bringing a guest" if guest.isPlusOne else "No, " + guest | firstName + " is not attending") }
           ]
         })}}
         {% if guest.isBaby %}
-          <p><small>Please let us know if there is anything that we can provide for the baby.</small></p>
           <input type="hidden" name="baby[starter]" value="milk">
           <input type="hidden" name="baby[main]" value="milk">
+          <p><small>Please let us know if there is anything that we can provide for the baby:</small></p>
+          <textarea name="{{ guest.id }}[dietary]" rows="6">{{ guest.dietary }}</textarea>
         {% else %}
           {{ courseOptions({
             guest: guest,
