@@ -1,18 +1,74 @@
 @import "./colors";
 @import "./fonts";
 
-.validation-message {
-  color: red;
-  font-family: $sans-serif;
-  font-size: 0.8rem;
-  font-weight: bold;
-  ~ .meal-option {
-    border-left: 2px solid red;
-  }
-}
+$error-red: darken($red, 15%);
 
-.veg-option {
-  color: $green;
-  font-family: $cursive;
-  font-weight: bold;
+form {
+  fieldset {
+    border: none;
+    padding: 0;
+
+    h2,
+    h3 {
+      margin: 0;
+    }
+
+    &.guest {
+      margin-bottom: 1rem;
+      &.not-attending {
+        fieldset:not([data-field="attending"]) {
+          display: none;
+        }
+      }
+    }
+
+    &.options-set {
+      margin: 1rem 0;
+    }
+  }
+
+  .option {
+    margin: 1rem 0;
+    display: flex;
+    align-items: baseline;
+    input[type="radio"] {
+      margin-right: 0.5rem;
+    }
+  }
+
+  .veg {
+    color: darken($green, 15%);
+    font-family: $cursive;
+    font-weight: bold;
+  }
+
+  .validation-message {
+    color: $error-red;
+    font-family: $sans-serif;
+    font-size: 0.8rem;
+    font-weight: bold;
+    ~ .options {
+      border-left: 2px solid $error-red;
+      padding-left: 0.25rem;
+    }
+  }
+
+  input[type="submit"] {
+    background-color: transparent;
+    outline: none;
+    padding: 0.5rem;
+    border: 1px solid darken($off-white, 50%);
+    border-radius: 8px;
+
+    font-family: $sans-serif;
+    font-size: 1rem;
+
+    cursor: pointer;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: darken($off-white, 5%);
+    }
+  }
 }

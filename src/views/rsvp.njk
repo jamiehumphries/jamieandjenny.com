@@ -2,51 +2,86 @@
 
 {% set title = "R.S.V.P." %}
 
-{% macro option(guest, course, value, label) %}
-  {% set id = guest.id + "-" + course + "-" + value %}
-  {% set checked = guest[course] == value %}
-  <div class="meal-option">
-    <input type="radio" name="{{ guest.id }}[{{ course }}]" id="{{ id }}" value="{{ value }}"
-      {%- if checked  %} checked{% endif %}>
+{% macro option(guest, fieldName, value, label) %}
+  {% set id = guest.id + "-" + fieldName + "-" + value %}
+  {% set checked = guest[fieldName] == value %}
+  <div class="option">
+    <input type="radio" name="{{ guest.id }}[{{ fieldName }}]" id="{{ id }}" value="{{ value }}"
+      data-guest="{{ guest.id }}" data-field="{{ fieldName }}"{%- if checked  %} checked{% endif %}>
     <label for="{{ id }}">{{ label }}
     {% if value === "veg" %}
-      <span class="veg-option">V</span>
+      <span class="veg">V</span>
     {% endif %}
     </label>
   </div>
 {% endmacro %}
 
-{% macro courseOptions(data) %}
-  <fieldset>
+{% macro options(data) %}
+  <fieldset class="options-set" data-field="{{ data.fieldName }}">
     <legend>
-      <h3>{{ data.course.name | capitalize }}</h3>
+      <h3>{{ data.title }}</h3>
     </legend>
-    {% set validationMessage = validationMessages[data.guest.id + "-" + data.course.id] %}
+    {% set validationMessage = validationMessages[data.guest | validationKey(data.fieldName)] %}
     {% if validationMessage %}
       <p class="validation-message">{{ validationMessage }}</p>
     {% endif %}
-    <div>
-      {{ option(data.guest, data.course.id, "meat", data.meatOption) }}
-      {{ option(data.guest, data.course.id, "veg", data.vegOption) }}
+    <div class="options">
+      {% for optionData in data.options %}
+        {{ option(data.guest, data.fieldName, optionData.value, optionData.label) }}
+      {% endfor %}
     </div>
   </fieldset>
 {% endmacro %}
 
+{% macro courseOptions(data) %}
+  {{ options({
+    guest: data.guest,
+    title: "Choice of " + data.course.name + "?",
+    fieldName: data.course.id,
+    options: [
+      { value: "kids", label: "Children’s menu" } if data.guest.isChild,
+      { value: "meat", label: data.meatOption },
+      { value: "veg", label: data.vegOption }
+    ] | select
+  }) }}
+{% endmacro %}
+
 {% block content %}
   <form method="POST">
+    {% if validationMessages | length > 0 %}
+      <div class="validation-summary">
+        <p class="validation-message">
+          Please correct this missing information:
+        </p>
+        <ul>
+          {% for key, value in validationMessages %}
+            <li class="validation-message">{{ value }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
     {% for guest in guests %}
-      <fieldset>
+      <fieldset class="guest" data-guest="{{ guest.id }}">
         <legend>
           <h2>{{ guest.name }}</h2>
         </legend>
+        {{ options({
+          guest: guest,
+          title: "Attending?",
+          fieldName: "attending",
+          options: [
+            { value: "yes", label: "Yes, " + guest | firstName + " is attending" },
+            { value: "no", label: "No, " + guest | firstName + " is not attending" }
+          ]
+        })}}
         {{ courseOptions({
           guest: guest,
           course: {
             id: "starter",
             name: "starter"
           },
-          meatOption: "Chicken & Leek Terrine",
-          vegOption: "Welsh Cheese Risotto Cakes"
+          meatOption: "Chicken and leek terrine on baked olive bread with balsamic oil",
+          vegOption: "Welsh cheese risotto cakes with spicy dressed leaves, herb salsa and plum chutney"
         }) }}
         {{ courseOptions({
           guest: guest,
@@ -54,11 +89,15 @@
             id: "main",
             name: "main course"
           },
-          meatOption: "Lamb 2 Ways",
-          vegOption: "Strudel of Wild Mushroom"
+          meatOption: "Lamb 2 ways – rosemary and garlic infused pink cutlet, and lamb shoulder confit encased in shortcrust pastry, with minted potato tower, roasted heritage carrots and leek spoon, finished with a red wine jus",
+          vegOption: "Strudel of wild mushroom, leeks, cream cheese, roasted root vegetables and potato cake "
         }) }}
-    </fieldset>
+      </fieldset>
     {% endfor %}
     <input type="submit" value="Send">
   </form>
+{% endblock %}
+
+{% block scripts %}
+  <script src="/js/rsvp.js"></script>
 {% endblock %}

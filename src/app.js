@@ -6,6 +6,7 @@ const nunjucks = require("nunjucks");
 const path = require("path");
 
 const { notFoundHandler, unexpectedErrorHandler } = require("./error-handlers");
+const filters = require("./filters");
 const router = require("./router");
 
 function buildApp(isDev) {
@@ -16,11 +17,14 @@ function buildApp(isDev) {
   }
 
   const views = path.join(__dirname, "views");
-  nunjucks.configure(views, {
+  const nunjucksEnv = nunjucks.configure(views, {
     express: app,
     noCache: isDev,
     watch: isDev,
   });
+  Object.entries(filters).forEach(([name, filter]) =>
+    nunjucksEnv.addFilter(name, filter)
+  );
   app.set("view engine", "njk");
 
   const users = JSON.parse(process.env.USERS.replaceAll('\\"', '"'));

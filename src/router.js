@@ -3,6 +3,7 @@ const { initializeApp, cert } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
 const { pick } = require("lodash");
 
+const { firstName, validationKey } = require("./filters");
 const serviceAccount = require("./firebase/service-account");
 
 const router = express.Router();
@@ -68,7 +69,7 @@ function withData(...data) {
 }
 
 function pickRsvpData(req, guest) {
-  return pick(req.body[guest.id], "starter", "main");
+  return pick(req.body[guest.id], "attending", "starter", "main");
 }
 
 class GuestOptionsValidator {
@@ -78,23 +79,43 @@ class GuestOptionsValidator {
   }
 
   validate() {
+    if (this.data.attending === "no") {
+      return {};
+    }
+
     return {
+      ...this.validateAttendance(),
       ...this.validateCourse("starter"),
       ...this.validateCourse("main", "main course"),
     };
   }
 
-  validateCourse(courseId, courseName) {
-    const messages = {};
-    if (!this.isValidCourse(this.data[courseId])) {
-      const validationKey = `${this.guest.id}-${courseId}`;
-      messages[validationKey] = `Select a ${courseName || courseId}.`;
-    }
-    return messages;
+  validateAttendance() {
+    return this.validateOption(
+      "attending",
+      ["yes", "no"],
+      `Select whether or not ${firstName(this.guest)} is attending`
+    );
   }
 
-  isValidCourse(option) {
-    return ["meat", "veg"].includes(option);
+  validateCourse(courseId, courseName) {
+    const validOptions = ["meat", "veg"];
+    if (this.guest.isChild) {
+      validOptions.push("kids");
+    }
+    return this.validateOption(
+      courseId,
+      validOptions,
+      `Select a ${courseName || courseId} for ${firstName(this.guest)}`
+    );
+  }
+
+  validateOption(fieldName, validOptions, message) {
+    const messages = {};
+    if (!validOptions.includes(this.data[fieldName])) {
+      messages[validationKey(this.guest, fieldName)] = message;
+    }
+    return messages;
   }
 }
 
