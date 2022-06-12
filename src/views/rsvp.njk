@@ -75,7 +75,7 @@
           ]
         })}}
         {% if guest.isBaby %}
-          <p><em>Please let us know if there is anything that we can provide for the baby!</em></p>
+          <p><small>Please let us know if there is anything that we can provide for the baby.</small></p>
           <input type="hidden" name="baby[starter]" value="milk">
           <input type="hidden" name="baby[main]" value="milk">
         {% else %}
@@ -101,7 +101,7 @@
             <legend>
               <h3>Allergies or dietary requirements?</h3>
             </legend>
-            <p class="hint">Please let us know of any allergies or other dietary requirements:</p>
+            <p><small>Please let us know of any allergies or other dietary requirements:</small></p>
             <textarea name="{{ guest.id }}[dietary]" rows="6">{{ guest.dietary }}</textarea>
           </fieldset>
         {% endif %}
