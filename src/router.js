@@ -10,24 +10,24 @@ const router = express.Router();
 initializeApp({ credential: cert(serviceAccount) });
 const db = getFirestore();
 
-router.get("/", (req, res) => {
-  res.render("home", { name: req.auth.user });
+const USER = "user";
+const GUESTS = "guests";
+
+router.get("/", withData(USER), (req, res) => {
+  res.render("home");
 });
 
-router.get("/rsvp", async (req, res) => {
-  const guests = await getGuests(req.auth.user);
-  res.render("rsvp", { guests });
+router.get("/rsvp", withData(GUESTS), (req, res) => {
+  res.render("rsvp");
 });
 
-router.post("/rsvp", async (req, res) => {
-  const guests = await getGuests(req.auth.user);
-
+router.post("/rsvp", withData(GUESTS), async (req, res) => {
+  const { guests } = res.locals;
   const validationMessages = {};
   for (const guest of guests) {
     const validator = new GuestOptionsValidator(req, guest);
     Object.assign(validationMessages, validator.validate());
   }
-
   const hasValidationMessages = Object.keys(validationMessages).length > 0;
   if (hasValidationMessages) {
     const guestsWithFormData = guests.map((guest) =>
@@ -44,15 +44,23 @@ router.post("/rsvp", async (req, res) => {
   }
 });
 
-async function getGuests(user) {
-  const snapshot = await db
-    .collection("guests")
-    .where("user", "==", user)
-    .orderBy("rsvp_order")
-    .get();
-  return snapshot.docs.map((doc) => {
-    return { id: doc.id, ...doc.data() };
-  });
+function withData(...data) {
+  return async (req, res, next) => {
+    if (data.includes(USER)) {
+      res.locals.user = req.auth.user;
+    }
+    if (data.includes(GUESTS)) {
+      const snapshot = await db
+        .collection("guests")
+        .where("user", "==", req.auth.user)
+        .orderBy("rsvp_order")
+        .get();
+      res.locals.guests = snapshot.docs.map((doc) => {
+        return { id: doc.id, ...doc.data() };
+      });
+    }
+    next();
+  };
 }
 
 function pickRsvpData(req, guest) {
