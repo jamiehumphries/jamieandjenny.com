@@ -63,15 +63,15 @@
     {% for guest in guests %}
       <fieldset class="guest" data-guest="{{ guest.id }}">
         <legend>
-          <h2>{{ guest.name }}</h2>
+          <h2>{{ guest.name or ((guests | selectattr("isSingle") | first).name + " +1") }}</h2>
         </legend>
         {{ options({
           guest: guest,
-          title: "Attending?",
+          title: "Bringing a guest?" if guest.isPlusOne else "Attending?",
           fieldName: "attending",
           options: [
-            { value: "yes", label: "Yes, " + guest | firstName + " is attending" },
-            { value: "no", label: "No, " + guest | firstName + " is not attending" }
+            { value: "yes", label: "Yes, I am attending" if guest.isSingle else ("Yes, I am bringing a guest" if guest.isPlusOne else "Yes, " + guest | firstName + " is attending") },
+            { value: "no", label: "No, I am not attending" if guest.isSingle else ("No, I am not be bringing a guest" if guest.isPlusOne else "No, " + guest | firstName + " is not attending") }
           ]
         })}}
         {{ courseOptions({

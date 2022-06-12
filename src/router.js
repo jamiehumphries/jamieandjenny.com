@@ -91,11 +91,16 @@ class GuestOptionsValidator {
   }
 
   validateAttendance() {
-    return this.validateOption(
-      "attending",
-      ["yes", "no"],
-      `Select whether or not ${firstName(this.guest)} is attending`
-    );
+    let message = "Select whether or not ";
+    if (this.guest.isSingle) {
+      message += "you are attending";
+    } else if (this.guest.isPlusOne) {
+      message += "you are bringing a guest";
+    } else {
+      message += `${firstName(this.guest)} is attending`;
+    }
+
+    return this.validateOption("attending", ["yes", "no"], message);
   }
 
   validateCourse(courseId, courseName) {
@@ -103,11 +108,17 @@ class GuestOptionsValidator {
     if (this.guest.isChild) {
       validOptions.push("kids");
     }
-    return this.validateOption(
-      courseId,
-      validOptions,
-      `Select a ${courseName || courseId} for ${firstName(this.guest)}`
-    );
+
+    let message = `Select a ${courseName || courseId} for `;
+    if (this.guest.isSingle) {
+      message += "yourself";
+    } else if (this.guest.isPlusOne) {
+      message += "your guest";
+    } else {
+      message += firstName(this.guest);
+    }
+
+    return this.validateOption(courseId, validOptions, message);
   }
 
   validateOption(fieldName, validOptions, message) {
