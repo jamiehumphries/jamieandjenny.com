@@ -17,6 +17,10 @@ router.get("/", withData(USER), (req, res) => {
   res.render("home");
 });
 
+router.get("/info", withData(USER), (req, res) => {
+  res.render("info");
+});
+
 router.get("/rsvp", withData(GUESTS), (req, res) => {
   res.render("rsvp");
 });
