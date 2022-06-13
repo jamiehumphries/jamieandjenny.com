@@ -67,7 +67,7 @@
         </legend>
         {{ options({
           guest: guest,
-          title: "Attending?" if not isPlusOne else "Bringing a guest?",
+          title: "Attending?" if not guest.isPlusOne else "Bringing a guest?",
           fieldName: "attending",
           options: [
             { value: "yes", label: "Yes, I am attending" if guest.isSingle else ("Yes, I am bringing a guest" if guest.isPlusOne else "Yes, " + guest | firstName + " is attending") },
