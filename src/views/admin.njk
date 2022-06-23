@@ -1,0 +1,14 @@
+{% extends "layout.njk" %}
+
+{% set title = "Admin" %}
+
+{% block content %}
+  {% for user in users %}
+    <h2>{{ user.names }}</h2>
+    <ul>
+      {% for guest in user.guests %}
+        <li>{{ guest.name or ((user.guests | selectattr("isSingle") | first).name + " +1") }}</li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
+{% endblock %}

@@ -52,6 +52,24 @@ router.post("/rsvp", withData(GUESTS), async (req, res) => {
   }
 });
 
+router.get("/admin", withData(USER), async (req, res, next) => {
+  const { user } = res.locals;
+  if (!user.isAdmin) {
+    next();
+    return;
+  }
+  const usersQuery = await usersRef().get();
+  const users = await Promise.all(
+    usersQuery.docs.map(async (doc) => {
+      const user = docToObject(doc);
+      const guestsQuery = await userGuestsRef(doc.id).orderBy("index").get();
+      user.guests = guestsQuery.docs.map(docToObject);
+      return user;
+    })
+  );
+  res.render("admin", { users });
+});
+
 function withData(...data) {
   return async (req, res, next) => {
     const { user } = req.auth;
@@ -61,14 +79,18 @@ function withData(...data) {
     }
     if (data.includes(GUESTS)) {
       const query = await userGuestsRef(user).orderBy("index").get();
-      res.locals.guests = query.docs.map((doc) => docToObject(doc));
+      res.locals.guests = query.docs.map(docToObject);
     }
     next();
   };
 }
 
+function usersRef() {
+  return db.collection("users");
+}
+
 function userRef(user) {
-  return db.collection("users").doc(user);
+  return usersRef().doc(user);
 }
 
 function userGuestsRef(user) {
