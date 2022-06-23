@@ -22,7 +22,7 @@ router.get("/info", withData(USER), (req, res) => {
   res.render("info");
 });
 
-router.get("/rsvp", withData(GUESTS), (req, res) => {
+router.get("/rsvp", withData(USER, GUESTS), (req, res) => {
   res.render("rsvp");
 });
 
@@ -40,9 +40,12 @@ router.post("/rsvp", withData(GUESTS), async (req, res) => {
     );
     res.render("rsvp", { guests: guestsWithFormData, validationMessages });
   } else {
+    await userRef(req.auth.user).update({ hasSentRsvp: true });
     await Promise.all(
       guests.map((guest) =>
-        db.collection("guests").doc(guest.id).update(pickRsvpData(req, guest))
+        userGuestsRef(req.auth.user)
+          .doc(guest.id)
+          .update(pickRsvpData(req, guest))
       )
     );
     res.redirect("/");
@@ -51,21 +54,29 @@ router.post("/rsvp", withData(GUESTS), async (req, res) => {
 
 function withData(...data) {
   return async (req, res, next) => {
+    const { user } = req.auth;
     if (data.includes(USER)) {
-      res.locals.user = req.auth.user;
+      const doc = await userRef(user).get();
+      res.locals.user = docToObject(doc);
     }
     if (data.includes(GUESTS)) {
-      const snapshot = await db
-        .collection("guests")
-        .where("user", "==", req.auth.user)
-        .orderBy("rsvp_order")
-        .get();
-      res.locals.guests = snapshot.docs.map((doc) => {
-        return { id: doc.id, ...doc.data() };
-      });
+      const query = await userGuestsRef(user).orderBy("index").get();
+      res.locals.guests = query.docs.map((doc) => docToObject(doc));
     }
     next();
   };
+}
+
+function userRef(user) {
+  return db.collection("users").doc(user);
+}
+
+function userGuestsRef(user) {
+  return userRef(user).collection("guests");
+}
+
+function docToObject(doc) {
+  return { id: doc.id, ...doc.data() };
 }
 
 function pickRsvpData(req, guest) {
