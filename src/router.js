@@ -11,7 +11,7 @@ const router = express.Router();
 initializeApp({ credential: cert(serviceAccount) });
 const db = getFirestore();
 
-router.get("*", fetchUserData);
+router.use(fetchUserData);
 
 router.get("/", (req, res) => {
   res.render("home");
