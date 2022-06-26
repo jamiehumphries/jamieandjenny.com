@@ -83,7 +83,7 @@
     {% for guest in guests %}
       <fieldset class="guest" data-guest="{{ guest.id }}">
         <legend>
-          <h2>{{ guest.name or ((guests | selectattr("isSingle") | first).name + " +1") }}</h2>
+          <h2>{{ guest | rsvpName(guests) }}</h2>
         </legend>
         {{ options({
           guest: guest,
