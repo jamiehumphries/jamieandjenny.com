@@ -2,12 +2,23 @@
 
 {% set title = "R.S.V.P." %}
 
+{% macro fieldset(data) %}
+  <fieldset data-field="{{ data.fieldName }}">
+    {% if data.title %}
+      <legend>
+        <h3>{{ data.title }}</h3>
+      </legend>
+    {% endif %}
+    {{ caller() }}
+  </fieldset>
+{% endmacro %}
+
 {% macro option(guest, fieldName, value, label) %}
-  {% set id = guest.id + "-" + fieldName + "-" + value %}
+  {% set id = guest.id + "__" + fieldName + "__" + value %}
   {% set checked = guest[fieldName] == value %}
   <div class="option">
     <input type="radio" name="{{ guest.id }}[{{ fieldName }}]" id="{{ id }}" value="{{ value }}"
-      data-guest="{{ guest.id }}" data-field="{{ fieldName }}"{%- if checked  %} checked{% endif %}>
+      data-guest="{{ guest.id }}" data-field="{{ fieldName }}" {%- if checked  %} checked{% endif %}>
     <label for="{{ id }}">{{ label }}
     {% if value === "veg" %}
       <span class="veg">V</span>
@@ -17,10 +28,7 @@
 {% endmacro %}
 
 {% macro options(data) %}
-  <fieldset data-field="{{ data.fieldName }}">
-    <legend>
-      <h3>{{ data.title }}</h3>
-    </legend>
+  {% call fieldset(data) %}
     {% set validationMessage = validationMessages[data.guest | validationKey(data.fieldName)] %}
     {% if validationMessage %}
       <p class="validation-message">{{ validationMessage }}</p>
@@ -30,7 +38,7 @@
         {{ option(data.guest, data.fieldName, optionData.value, optionData.label) }}
       {% endfor %}
     </div>
-  </fieldset>
+  {% endcall %}
 {% endmacro %}
 
 {% macro courseOptions(data) %}
@@ -44,6 +52,18 @@
       { value: "veg", label: data.vegOption }
     ] | select
   }) }}
+{% endmacro %}
+
+{% macro textarea(data) %}
+  {% call fieldset(data) %}
+    {% set id = data.guest.id + "__" + data.fieldName %}
+    <label for="{{ id }}">
+      <small>{{ data.label }}:</small>
+    </label>
+    <textarea id="{{ id }}" name="{{ data.guest.id }}[{{ data.fieldName }}]" rows="6">
+      {{- data.guest.dietary -}}
+    </textarea>
+  {% endcall %}
 {% endmacro %}
 
 {% block content %}
@@ -75,10 +95,13 @@
           ]
         })}}
         {% if guest.isBaby %}
-          <input type="hidden" name="baby[starter]" value="milk">
-          <input type="hidden" name="baby[main]" value="milk">
-          <p><small>Please let us know if there is anything that we can provide for the baby:</small></p>
-          <textarea name="{{ guest.id }}[dietary]" rows="6">{{ guest.dietary }}</textarea>
+          <input type="hidden" name="{{ guest.id }}[starter]" value="milk">
+          <input type="hidden" name="{{ guest.id }}[main]" value="milk">
+          {{ textarea({
+            guest: guest,
+            fieldName: "dietary",
+            label: "Please let us know if there is anything that we can provide for the baby"
+          }) }}
         {% else %}
           {{ courseOptions({
             guest: guest,
@@ -98,13 +121,12 @@
             meatOption: "Lamb 2 ways – rosemary and garlic infused pink cutlet, and lamb shoulder confit encased in shortcrust pastry, with minted potato tower, roasted heritage carrots and leek spoon, finished with a red wine jus",
             vegOption: "Strudel of wild mushroom, leeks, cream cheese, roasted root vegetables and potato cake "
           }) }}
-          <fieldset data-field="{{ data.fieldName }}">
-            <legend>
-              <h3>Allergies or dietary requirements?</h3>
-            </legend>
-            <p><small>Please let us know of any allergies or other dietary requirements:</small></p>
-            <textarea name="{{ guest.id }}[dietary]" rows="6">{{ guest.dietary }}</textarea>
-          </fieldset>
+          {{ textarea({
+            guest: guest,
+            title: "Allergies or dietary requirements?",
+            fieldName: "dietary",
+            label: "Please let us know of any allergies or other dietary requirements"
+          }) }}
         {% endif %}
       </fieldset>
     {% endfor %}
