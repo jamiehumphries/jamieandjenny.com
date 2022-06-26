@@ -1,0 +1,19 @@
+{% set deadline %}the end of July{% endset %}
+{% if user.hasSentRsvp %}
+  <p>
+    Thank you for sending your R.S.V.P.
+  </p>
+  <p>
+    You can update it here on the website until {{ deadline | safe }}.
+  </p>
+  <p>
+    If you need to make changes after that, please contact us directly.
+  </p>
+{% else %}
+  <p>
+    Please R.S.V.P. here on the website to indicate your attendance and meal choices.
+  </p>
+  <p>
+    We request that your R.S.V.P. is sent <strong>by {{ deadline | safe }}</strong>.
+  </p>
+{% endif %}

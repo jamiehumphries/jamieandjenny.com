@@ -21,7 +21,7 @@ nav {
   align-items: center;
   padding: 1rem;
   a {
-    color: #000;
+    color: black;
     padding: 0 12px;
     text-decoration: none;
     img {
@@ -39,7 +39,7 @@ nav {
       }
     }
     + a {
-      border-left: 1px solid #000;
+      border-left: 1px solid black;
     }
   }
 }

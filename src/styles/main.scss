@@ -1,6 +1,7 @@
 @import "./colors";
 @import "./error";
 @import "./fonts";
+@import "./button";
 @import "./form";
 @import "./layout";
 
@@ -8,18 +9,28 @@ body {
   margin: 0;
   background-color: $off-white;
   font-family: $sans-serif;
+}
 
-  h1,
-  h2,
-  h3 {
-    font-family: $cursive;
-  }
+h1,
+h2,
+h3 {
+  font-family: $cursive;
+}
 
-  h2 {
-    font-size: 2rem;
-  }
+h2 {
+  font-size: 2rem;
+}
 
-  h3 {
-    font-size: 1.4rem;
-  }
+h3 {
+  font-size: 1.4rem;
+}
+
+a {
+  color: $blue;
+}
+
+.address {
+  display: block;
+  margin-top: 0.5rem;
+  margin-left: 1rem;
 }

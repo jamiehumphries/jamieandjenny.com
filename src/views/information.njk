@@ -1,0 +1,176 @@
+{% extends "layout.njk" %}
+
+{% set title = "Information" %}
+
+{% macro withTableOfContents() %}
+  <h2>Contents</h2>
+  {% set toc = caller() | tableOfContents %}
+  <ul>
+    {% for link in toc.links %}
+      <li>
+        <a href="#{{ link.id }}">{{ link.text }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+  {{ toc.html | safe }}
+{% endmacro %}
+
+{% block content %}
+  {% call withTableOfContents() %}
+    <h2>R.S.V.P.</h2>
+    {% include "./partials/rsvp-section.njk" %}
+    <a href="/rsvp" class="button-link">
+      {% if user.hasSentRsvp %}
+        Update R.S.V.P.
+      {% else %}
+        R.S.V.P.
+      {% endif %}
+    </a>
+
+    <h2>Date and timings</h2>
+    <p>
+      The wedding is on Saturday 1<sup>st</sup> October 2022.
+    </p>
+    <p>
+      The ceremony will begin at 3pm in St Fagans Castle,
+      so please be seated by about 2:45pm.
+    </p>
+    <p>
+      A reception of drinks and canapés will follow in the grounds of the castle,
+      until dinner is served at 6pm.
+    </p>
+    <p>
+      Following the dinner, there will be a disco and bar until it’s time for carriages at midnight.
+    </p>
+
+    <h2>Venue and transport</h2>
+    <p>
+      The cermony and reception will be held in
+      <a href="https://museum.wales/stfagans/buildings/castle/" target="_blank" rel="noopener noreferrer">St Fagans Castle</a>,
+      within the grounds of the
+      <a href="https://museum.wales/stfagans/" target="_blank" rel="noopener noreferrer">St Fagans National Museum of History</a>.
+    </p>
+    <p>
+      We will have private use of the back entrance to the museum, which leads directly in to the Castle.
+      The gate is opposite St Mary’s Church in St Fagans village.
+    </p>
+    <p>
+      You can also enter via the main entrance to the museum,
+      which is a 10 minute walk through the grounds to the Castle.
+    </p>
+    <p>
+      The Castle is marked number 59 on this map of the museum:
+      <a href="https://museum.wales/stfagans/" target="_blank" rel="noopener noreferrer">St Fagans Map</a>
+    </p>
+    <h3>
+      Driving and parking
+    </h3>
+    <p>
+      The postcode for the museum is CF5 6XB.
+    </p>
+    <p>
+      We will have private use of a small car park beside the Castle for the day,
+      however cars cannot be left there overnight.
+    </p>
+    <p>
+      If you do wish to leave your car overnight, you can park in the main museum car park.
+      Let us know if you plan to do this, so that we can arrange a parking pass for you.
+    </p>
+    <h3>
+      Taxis
+    </h3>
+    <p>
+      We recommend
+      <a href="https://www.dragontaxis.com/" target="_blank" rel="noopener noreferrer">Dragon Taxis</a>
+      in Cardiff.
+      Their number is 02920 333 333.
+    </p>
+    <p>
+      Tell the taxi to use the back entrance to St Fagans, as this is much closer to the Castle.
+    </p>
+    {% if user.nightsAtMaltsters > 0 %}
+      <p>
+        There will be a group taxi going back to the hotel just after midnight.
+      </p>
+    {% endif %}
+
+    {% if user.nightsAtMaltsters > 0 %}
+      <h2>Accomodation</h2>
+      <p>
+        We have booked a room for you to stay at the
+        <a href="https://sabrainpubs.com/pubs-and-hotels/south-wales/cardiff/maltsters/stay-with-us" target="_blank" rel="noopener noreferrer">Maltsters’ Arms Hotel</a>
+        on
+        {% if user.nightsAtMaltsters === 1 %}
+          Saturday night
+        {% elif user.nightsAtMaltsters === 2 %}
+          Friday and Saturday night
+        {%- endif %}.
+      </p>
+      <p>
+        The hotel is situated in Llandaff village, about 15 minutes drive from St Fagans.
+      </p>
+      <p>
+        The address is:
+        <span class="address">
+          Maltsters’ Arms Hotel<br>
+          42-44 Cardiff Road<br>
+          Llandaff<br>
+          CF5 2DS
+        </span>
+      </p>
+    {% endif %}
+
+    <h2>Sunday brunch</h2>
+    <p>
+      On Sunday morning, you’re very welcome to come over to Jenny’s parent’s house for some brunch or just a cup of tea before you head home.
+    </p>
+    <p>
+      Their address is:
+      <span class="address">
+        32 Fairwater Grove West<br>
+        Llandaff<br>
+        CF5 2JQ
+      </span>
+    </p>
+    <p>
+      We’ll be there from about 10:30am to 2pm, but feel free to pop in for as much or as little as you like.
+    </p>
+
+    <h2>Gifts</h2>
+    <p>
+      We don’t have a gift list or a registry and have no expectation of gifts.
+      Truly, just having you there to celebrate with us is all we need.
+    </p>
+    <p>
+      If you do wish to get us something and would like some inspiration,
+      there’s not much we enjoy more than eating and drinking!
+    </p>
+    <p>
+      A bottle of wine or spirits will always be gratefully received,
+      as would a voucher towards a meal at any of these restaurants that we love:
+    </p>
+    {% set restaurants = [
+      { name: "Thomas", url: "https://thomas-pontcanna.co.uk/gift-vouchers/" },
+      { name: "Mowgli Street Food", url: "https://www.mowglistreetfoodgifts.com/" },
+      { name: "Miller & Carter", url: "https://www.millerandcartergifts.co.uk/" },
+      { name: "Nando’s", url: "https://www.nandos.co.uk/food/shop" } if user.isOneOfTheBoys
+    ] | select %}
+    <ul>
+      {% for restaurant in restaurants %}
+        <li>
+          <a href="{{ restaurant.url }}" target="_blank" rel="noopener noreferrer">
+            {{ restaurant.name }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+
+    <h2>Any other questions?</h2>
+    <p>
+      Please don’t hesitate to contact us with any other questions.
+    </p>
+    <p>
+      We can’t wait to celebrate with you!
+    </p>
+  {% endcall %}
+{% endblock %}

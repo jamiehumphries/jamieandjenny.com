@@ -17,12 +17,21 @@ router.get("/", (req, res) => {
   res.render("home");
 });
 
-router.get("/info", (req, res) => {
-  res.render("info");
+router.get("/information", (req, res) => {
+  res.render("information");
 });
 
 router.get("/rsvp", fetchGuestData, (req, res) => {
   res.render("rsvp");
+});
+
+router.get("/rsvp/sent", fetchGuestData, (req, res) => {
+  const { user } = res.locals;
+  if (user.hasSentRsvp) {
+    res.render("rsvp-sent");
+  } else {
+    res.redirect("/rsvp");
+  }
 });
 
 router.post("/rsvp", fetchGuestData, async (req, res) => {
@@ -47,7 +56,7 @@ router.post("/rsvp", fetchGuestData, async (req, res) => {
           .update(pickRsvpData(req, guest))
       )
     );
-    res.redirect("/");
+    res.redirect("/rsvp/sent");
   }
 });
 
