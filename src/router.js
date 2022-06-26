@@ -11,22 +11,21 @@ const router = express.Router();
 initializeApp({ credential: cert(serviceAccount) });
 const db = getFirestore();
 
-const USER = "user";
-const GUESTS = "guests";
+router.get("*", fetchUserData);
 
-router.get("/", withData(USER), (req, res) => {
+router.get("/", (req, res) => {
   res.render("home");
 });
 
-router.get("/info", withData(USER), (req, res) => {
+router.get("/info", (req, res) => {
   res.render("info");
 });
 
-router.get("/rsvp", withData(USER, GUESTS), (req, res) => {
+router.get("/rsvp", fetchGuestData, (req, res) => {
   res.render("rsvp");
 });
 
-router.post("/rsvp", withData(GUESTS), async (req, res) => {
+router.post("/rsvp", fetchGuestData, async (req, res) => {
   const { guests } = res.locals;
   const validationMessages = {};
   for (const guest of guests) {
@@ -52,7 +51,7 @@ router.post("/rsvp", withData(GUESTS), async (req, res) => {
   }
 });
 
-router.get("/admin", withData(USER), async (req, res, next) => {
+router.get("/admin", async (req, res, next) => {
   const { user } = res.locals;
   if (!user.isAdmin) {
     next();
@@ -62,39 +61,40 @@ router.get("/admin", withData(USER), async (req, res, next) => {
   const users = await Promise.all(
     usersQuery.docs.map(async (doc) => {
       const user = docToObject(doc);
-      const guestsQuery = await userGuestsRef(doc.id).orderBy("index").get();
-      user.guests = guestsQuery.docs.map(docToObject);
+      user.guests = await fetchUserGuests(doc.id);
       return user;
     })
   );
   res.render("admin", { users });
 });
 
-function withData(...data) {
-  return async (req, res, next) => {
-    const { user } = req.auth;
-    if (data.includes(USER)) {
-      const doc = await userRef(user).get();
-      res.locals.user = docToObject(doc);
-    }
-    if (data.includes(GUESTS)) {
-      const query = await userGuestsRef(user).orderBy("index").get();
-      res.locals.guests = query.docs.map(docToObject);
-    }
-    next();
-  };
+async function fetchUserData(req, res, next) {
+  const { user } = req.auth;
+  const doc = await userRef(user).get();
+  res.locals.user = docToObject(doc);
+  next();
+}
+
+async function fetchGuestData(req, res, next) {
+  res.locals.guests = await fetchUserGuests(req.auth.user);
+  next();
+}
+
+async function fetchUserGuests(userId) {
+  const query = await userGuestsRef(userId).orderBy("index").get();
+  return query.docs.map(docToObject);
 }
 
 function usersRef() {
   return db.collection("users");
 }
 
-function userRef(user) {
-  return usersRef().doc(user);
+function userRef(userId) {
+  return usersRef().doc(userId);
 }
 
-function userGuestsRef(user) {
-  return userRef(user).collection("guests");
+function userGuestsRef(userId) {
+  return userRef(userId).collection("guests");
 }
 
 function docToObject(doc) {
