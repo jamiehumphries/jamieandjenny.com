@@ -151,8 +151,10 @@
     </p>
     {% set restaurants = [
       { name: "Thomas", url: "https://thomas-pontcanna.co.uk/gift-vouchers/" },
+      { name: "Bully’s", url: "http://bullysrestaurant.co.uk/vouchers/" },
       { name: "Mowgli Street Food", url: "https://www.mowglistreetfoodgifts.com/" },
       { name: "Miller & Carter", url: "https://www.millerandcartergifts.co.uk/" },
+      { name: "Pettigrew Tea Rooms", url: "https://www.pettigrew-tearooms.co.uk/buy-gift-vouchers" },
       { name: "Nando’s", url: "https://www.nandos.co.uk/food/shop" } if user.isOneOfTheBoys
     ] | select %}
     <ul>
