@@ -1,0 +1,32 @@
+@mixin button {
+  $button-padding: 0.5rem;
+  $button-height: 3rem;
+  $button-border-size: 1px;
+
+  box-sizing: border-box;
+  min-width: 80px;
+  padding: $button-padding;
+  height: $button-height;
+  border: $button-border-size solid darken($off-white, 50%);
+  line-height: calc(
+    $button-height - (2 * $button-padding) - (2 * $button-border-size)
+  );
+  border-radius: 8px;
+  outline: none;
+  text-align: center;
+
+  color: black;
+  font-family: $sans-serif;
+  font-size: 1rem;
+  font-weight: normal;
+
+  cursor: pointer;
+
+  background-color: $off-white;
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: darken($off-white, 5%);
+  }
+}

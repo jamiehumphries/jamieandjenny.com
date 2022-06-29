@@ -1,9 +1,11 @@
 @import "./colors";
-@import "./error";
 @import "./fonts";
+@import "./mixins";
+
 @import "./button";
-@import "./form";
 @import "./layout";
+@import "./error";
+@import "./form";
 
 body {
   margin: 0;
