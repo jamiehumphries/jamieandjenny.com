@@ -7,7 +7,7 @@
   min-width: 80px;
   padding: $button-padding;
   height: $button-height;
-  border: $button-border-size solid darken($off-white, 50%);
+  border: $button-border-size solid $border-color;
   line-height: calc(
     $button-height - (2 * $button-padding) - (2 * $button-border-size)
   );

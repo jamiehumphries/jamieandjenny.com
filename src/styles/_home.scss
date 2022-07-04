@@ -1,0 +1,16 @@
+$signature-indent: 1.5rem;
+
+img.signature {
+  display: block;
+  width: 240px;
+  max-width: calc(100% - $signature-indent);
+  margin: 1rem 0 0 $signature-indent;
+}
+
+img.main-image {
+  display: block;
+  max-width: 90%;
+  max-height: 500px;
+  margin: 1rem 0;
+  border: 1px solid $border-color;
+}

@@ -6,6 +6,9 @@ const { pick } = require("lodash");
 const { firstName, validationKey } = require("./filters");
 const serviceAccount = require("./firebase/service-account");
 
+const WEDDING_DAY = new Date(2022, 9, 1);
+const MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000;
+
 const router = express.Router();
 
 initializeApp({ credential: cert(serviceAccount) });
@@ -14,7 +17,9 @@ const db = getFirestore();
 router.use(fetchUserData);
 
 router.get("/", (req, res) => {
-  res.render("home");
+  const now = new Date();
+  const daysToGo = Math.ceil((WEDDING_DAY - now) / MILLISECONDS_IN_DAY);
+  res.render("home", { daysToGo });
 });
 
 router.get("/information", (req, res) => {
