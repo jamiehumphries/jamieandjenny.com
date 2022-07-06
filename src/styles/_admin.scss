@@ -1,0 +1,21 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead tr th {
+    background-color: darken($off-white, 20%);
+  }
+
+  tbody tr th {
+    background-color: darken($off-white, 10%);
+  }
+
+  th,
+  td {
+    border: 1px solid;
+    padding: 0.2rem;
+    text-align: center;
+  }
+
+  margin-bottom: 3rem;
+}

@@ -3,13 +3,29 @@
 {% set title = "Admin" %}
 
 {% block content %}
-  {% for user in users %}
-    <h2>{{ user.names }}</h2>
-    <ul>
-      {% for guest in user.guests %}
-        <li>{{ guest | rsvpName(user.guests) }}</li>
-      {% endfor %}
-    </ul>
-    <img class="main-image" src="/images/main/{{ user.image }}" alt="Jamie and Jenny">
-  {% endfor %}
+    <table>
+      <thead>
+        <th>Name</th>
+        <th>Attending</th>
+        <th>Starter</th>
+        <th>Main</th>
+        <th>Dietary requirements</th>
+      </thead>
+      <tbody>
+        {% for user in users %}
+          <tr>
+            <th colspan="5">{{ user.names }}</th>
+          </tr>
+          {% for guest in user.guests %}
+            <tr>
+              <td>{{ guest | rsvpName(user.guests) }}</td>
+              <td>{{ guest.attending | attendingSymbol }}</td>
+              <td>{{ guest.starter | courseSymbol(guest.attending) }}</td>
+              <td>{{ guest.main | courseSymbol(guest.attending) }}</td>
+              <td>{{ guest.dietary }}</td>
+            </tr>
+          {% endfor %}
+        {% endfor %}
+      </tbody>
+    </table>
 {% endblock %}

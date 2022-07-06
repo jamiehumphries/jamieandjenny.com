@@ -132,7 +132,7 @@ class GuestOptionsValidator {
 
     return {
       ...this.validateAttendance(),
-      ...this.validateCourse("starter"),
+      ...this.validateCourse("starter", "starter"),
       ...this.validateCourse("main", "main course"),
     };
   }
@@ -159,7 +159,7 @@ class GuestOptionsValidator {
       validOptions.push("milk");
     }
 
-    let message = `Select a ${courseName || courseId} for `;
+    let message = `Select a ${courseName} for `;
     if (this.guest.isSingle) {
       message += "yourself";
     } else if (this.guest.isPlusOne) {

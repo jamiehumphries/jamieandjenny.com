@@ -1,5 +1,34 @@
 const cheerio = require("cheerio");
 
+function attendingSymbol(value) {
+  switch (value) {
+    case "yes":
+      return "✔️";
+    case "no":
+      return "❌";
+    default:
+      return "";
+  }
+}
+
+function courseSymbol(value, attending) {
+  if (attending === "no") {
+    return "–";
+  }
+  switch (value) {
+    case "meat":
+      return "🥩";
+    case "veg":
+      return "🥬";
+    case "kids":
+      return "🚸";
+    case "milk":
+      return "🍼";
+    default:
+      return "";
+  }
+}
+
 function firstName(guest) {
   return guest.name.split(" ")[0];
 }
@@ -38,6 +67,8 @@ function validationKey(guest, fieldName) {
 }
 
 module.exports = {
+  attendingSymbol,
+  courseSymbol,
   firstName,
   rsvpName,
   tableOfContents,
