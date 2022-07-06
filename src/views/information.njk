@@ -99,12 +99,7 @@
       <p>
         We have booked a room for you to stay at the
         <a href="https://sabrainpubs.com/pubs-and-hotels/south-wales/cardiff/maltsters/stay-with-us" target="_blank" rel="noopener noreferrer">Maltsters’ Arms Hotel</a>
-        on
-        {% if user.nightsAtMaltsters === 1 %}
-          Saturday night
-        {% elif user.nightsAtMaltsters === 2 %}
-          Friday and Saturday night
-        {%- endif %}.
+        on {% if user.nightsAtMaltsters === 2 %} Friday and {% endif %} Saturday night.
       </p>
       <p>
         The hotel is situated in Llandaff village, about 15 minutes drive from St Fagans.
