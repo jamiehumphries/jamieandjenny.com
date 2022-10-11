@@ -4,38 +4,49 @@
 {% set title = "Jamie and Jenny’s Wedding" %}
 
 {% block content %}
-  <p>
-    Hello {{ user.names }}!
-  </p>
-    {% set dayOrDays = "day" if (daysToGo | abs) === 1 else "days" %}
-    {% if daysToGo > 0 %}
-      <p>
-        Only {{ daysToGo }} {{ dayOrDays }} to go until the wedding!
-      </p>
-      <p>
-        We’re looking forward to celebrating with you.
-      </p>
-    {% elif daysToGo === 0 %}
-      <p>
-        Today’s the day! 🤵👰
-      </p>
-    {% elif daysToGo < 0 %}
-      <p>
-        We’ve been married for {{ -daysToGo }} {{ dayOrDays }}!
-      </p>
-      <p>
-        It was wonderful to celebrate with you.
-      </p>
+  {% if user.names %}
+    <p>
+      Hello {{ user.names }}!
+    </p>
+  {% endif %}
+  {% set dayOrDays = "day" if (daysToGo | abs) === 1 else "days" %}
+  {% if daysToGo < 0 or isStatic %}
+    <p>
+      We’ve been married for <span id="days-married">{{ -daysToGo }}</span> {{ dayOrDays }}!
+    </p>
+    {% if isStatic %}
+      <script>
+        const oneDayMs = 24 * 60 * 60 * 1000;
+        const daysMarried = Math.floor((new Date() - new Date("2022-10-01")) / oneDayMs);
+        document.getElementById("days-married").innerText = daysMarried;
+      </script>
     {% endif %}
+    <p>
+      It was wonderful to celebrate with you.
+    </p>
+  {% elif daysToGo > 0 %}
+    <p>
+      Only {{ daysToGo }} {{ dayOrDays }} to go until the wedding!
+    </p>
+    <p>
+      We’re looking forward to celebrating with you.
+    </p>
+  {% elif daysToGo === 0 %}
+    <p>
+      Today’s the day! 🤵👰
+    </p>
+  {% endif %}
   <p>
     Love,
     <img class="signature" src="/images/signature.png" alt="Jamie & Jenny xxx">
   </p>
-  <a href="/information" class="button-link">
-    Information
-  </a>
-  <a href="/rsvp" class="button-link">
-    R.S.V.P.
-  </a>
-  <img class="main-image" src="/images/main/{{ user.image }}" alt="Jamie and Jenny">
+  {% if not isStatic %}
+    <a href="/information" class="button-link">
+      Information
+    </a>
+    <a href="/rsvp" class="button-link">
+      R.S.V.P.
+    </a>
+  {% endif %}
+  <img class="main-image" src="/images/main/{{ user.image if user else 'wedding.jpg' }}" alt="Jamie and Jenny">
 {% endblock %}

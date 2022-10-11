@@ -9,6 +9,7 @@
     "prebuild": "npm run clean",
     "build": "run-p build:*",
     "build:sass": "npm run sass -- --style=compressed --no-source-map",
+    "build-static": "node src/build-static.js",
     "configure": "heroku config --app jamieandjenny --shell > .env",
     "clean": "rimraf src/public/generated/",
     "predev": "npm run clean",
@@ -18,14 +19,16 @@
     "dev:sync": "browser-sync start --config bs-config.js",
     "lint": "eslint src/",
     "sass": "sass src/styles/:src/public/generated/css/",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "start-static": "ws --directory docs"
   },
   "dependencies": {
     "cheerio": "1.0.0-rc.12",
     "express": "4.18.1",
     "express-basic-auth": "1.2.1",
     "express-sslify": "1.2.0",
-    "firebase-admin": "10.2.0",
+    "firebase-admin": "10.3.0",
+    "local-web-server": "5.2.1",
     "lodash": "4.17.21",
     "nunjucks": "3.2.3"
   },
@@ -35,6 +38,7 @@
     "dotenv": "16.0.1",
     "eslint": "8.16.0",
     "eslint-config-prettier": "8.5.0",
+    "fs-extra": "10.1.0",
     "node-dev": "7.4.3",
     "npm-run-all": "4.1.5",
     "prettier": "2.6.2",
