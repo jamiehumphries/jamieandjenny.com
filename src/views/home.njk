@@ -12,13 +12,21 @@
   {% set dayOrDays = "day" if (daysToGo | abs) === 1 else "days" %}
   {% if daysToGo < 0 or isStatic %}
     <p>
-      We’ve been married for <span id="days-married">{{ -daysToGo }}</span> {{ dayOrDays }}!
+      We’ve been married for <span id="time-married">{{ -daysToGo }} {{ dayOrDays }}</span>!
     </p>
     {% if isStatic %}
       <script>
-        const oneDayMs = 24 * 60 * 60 * 1000;
-        const daysMarried = Math.floor((new Date() - new Date("2022-10-01")) / oneDayMs);
-        document.getElementById("days-married").innerText = daysMarried;
+        const today = new Date();
+        const timeParts = [
+          { name: "year", value: today.getFullYear() - 2022 - (today.getMonth() < 9) },
+          { name: "month", value: (today.getMonth() - 9 + 12) % 12 },
+          { name: "day", value: today.getDate() - 1 },
+        ];
+        const timeStrings = timeParts
+          .filter((part) => part.value > 0)
+          .map((part) => `${part.value} ${part.name}${part.value == 1 ? "" : "s"}`);
+        const listFormatter = new Intl.ListFormat("en-gb");
+        document.getElementById("time-married").innerText = listFormatter.format(timeStrings);
       </script>
     {% endif %}
     <p>
