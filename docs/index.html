@@ -30,17 +30,25 @@
     </p>
     
       <script>
-        const today = new Date();
-        const timeParts = [
-          { name: "year", value: today.getFullYear() - 2022 - (today.getMonth() < 9) },
-          { name: "month", value: (today.getMonth() - 9 + 12) % 12 },
-          { name: "day", value: today.getDate() - 1 },
-        ];
-        const timeStrings = timeParts
-          .filter((part) => part.value > 0)
-          .map((part) => `${part.value} ${part.name}${part.value == 1 ? "" : "s"}`);
-        const listFormatter = new Intl.ListFormat("en-gb");
-        document.getElementById("time-married").innerText = listFormatter.format(timeStrings);
+        var timeMarriedElement = document.getElementById("time-married");
+        function updateTimeMarried() {
+          const today = new Date();
+          const timeParts = [
+            { name: "year", value: today.getFullYear() - 2022 - (today.getMonth() < 9) },
+            { name: "month", value: (today.getMonth() - 9 + 12) % 12 },
+            { name: "day", value: today.getDate() - 1 },
+          ];
+          const timeStrings = timeParts
+            .filter((part) => part.value > 0)
+            .map((part) => `${part.value} ${part.name}${part.value == 1 ? "" : "s"}`);
+          const listFormatter = new Intl.ListFormat("en-gb");
+          const timeMarried = listFormatter.format(timeStrings);
+          if (timeMarriedElement.innerText != timeMarried) {
+            timeMarriedElement.innerText = timeMarried;
+          }
+        }
+        updateTimeMarried();
+        setInterval(updateTimeMarried, 1000);
       </script>
     
     <p>
