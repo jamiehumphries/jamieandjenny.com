@@ -43,7 +43,7 @@
             .map((part) => `${part.value} ${part.name}${part.value == 1 ? "" : "s"}`);
           const listFormatter = new Intl.ListFormat("en-gb");
           const timeMarried = listFormatter.format(timeStrings);
-          if (timeMarriedElement.innerText != timeMarried) {
+          if (timeMarriedElement.innerText !== timeMarried) {
             timeMarriedElement.innerText = timeMarried;
           }
         }
